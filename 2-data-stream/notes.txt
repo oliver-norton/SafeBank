@@ -1,0 +1,11 @@
+# start kafka server:
+
+
+zookeeper-server-start.sh /opt/kafka_2.13-3.9.0/config/zookeeper.properties
+kafka-server-start.sh /opt/kafka_2.13-3.9.0/config/server.properties
+
+# run producer script
+python producer_script.py  # Replace with your script filename
+
+# run consumer script
+python consumer_script.py  # Replace with your script filename
