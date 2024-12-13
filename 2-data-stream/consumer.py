@@ -1,15 +1,15 @@
 from kafka import KafkaConsumer
 import json
 
-
+# Initialize Kafka consumer to listen on 'fraudulent_transactions' topic
 consumer = KafkaConsumer(
     'fraudulent_transactions',
-    value_serializer=lambda x: json.loads(x.decode('utf-8'))
+    bootstrap_servers='localhost:9092',  # Kafka server address
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))  # Deserialize the message back to JSON
 )
 
-# list for messages on the topic
-
+# Listen for messages on the Kafka topic
 for message in consumer:
     transaction = message.value
     print(f"Received: {transaction}")
-    ## process here 
+    # You can now process the transaction here (e.g., classify fraud)
