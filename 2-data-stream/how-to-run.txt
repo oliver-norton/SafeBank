@@ -1,0 +1,36 @@
+# start data process (in order):
+# open 4 terminals
+
+# start postgres service
+sudo service postgresql start
+
+# start zookeepr
+zookeeper-server-start.sh /opt/kafka_2.13-3.9.0/config/zookeeper.properties
+
+# start kafka
+kafka-server-start.sh /opt/kafka_2.13-3.9.0/config/server.properties
+
+# run producer script
+python3 ./2-data-stream/b_stream_data/producer_chunks.py producer_script.py 
+
+# run consumer script
+python3 python3 ./2-data-stream/c-preprocess-clasify/consumer_preprocess.py 
+
+##### extra information related to postgresql database SafeBank_db 
+
+# create a database (one time) 
+python3 create_postgres_db.py
+
+# create our table (one time) 
+python3 create_table.py
+
+# in terminal: 
+sudo -i -u postgres  # Switch to the postgres user (if not already)
+
+psql -d SafeBank_db  # Connect to your newly created database - OR \c SafeBank_db
+
+\dt # list tables 
+
+SELECT * FROM fraud_classifications; # view our table specifically 
+
+\q # to quit 
