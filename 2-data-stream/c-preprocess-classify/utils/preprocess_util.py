@@ -1,3 +1,5 @@
+print('Importing packages')
+
 import pandas as pd
 import pickle as pkl
 from sklearn.preprocessing import LabelEncoder
@@ -7,14 +9,18 @@ from sklearn.feature_selection import mutual_info_classif
 from scipy.stats import chi2_contingency
 import lightgbm as lgb
 import datetime
+import os
 
 def preprocess(df):
     """Preprocessing logic for the chunk of data."""
     # Example preprocessing logic
     tsIdTr = df.copy()
-    
+    print(tsIdTr)
+
+    print(os.getcwd())
+
     # Load the preprocess_info dictionary
-    with open('../preprocess_info/preprocess_info.pkl', 'rb') as file:
+    with open('2-data-stream/c-preprocess-classify/preprocess_info/preprocess_info.pkl', 'rb') as file:
         preprocess_info = pkl.load(file)
 
     ## ONCE OFF: rename the columns 
@@ -24,6 +30,7 @@ def preprocess(df):
                         'id-14', 'id-35', 'id-10', 'id-05', 'id-33', 'id-31', 'id-30', 'id-12', 'id-19', 'id-23', 'id-36', 'id-38', 'id-37', 
                         'id-07', 'id-24', 'id-11', 'id-15', 'id-25', 'id-32', 'id-09', 'id-18', 'id-08', 'id-29', 'id-28', 'id-04'}
 
+
     # Create a mapping of old column names to new column names
     rename_mapping = {col: col.replace('-', '_') for col in mismatched_columns}
 
@@ -31,7 +38,7 @@ def preprocess(df):
     tsIdTr.rename(columns=rename_mapping, inplace=True)
 
     # Verify the renaming
-    print("Updated columns in tsIdTr:", tsIdTr.columns)
+    print("Updated columns in tsIdTr:", list(tsIdTr.columns))
 
     # Convert both lists to sets
     set_tsIdTr = set(tsIdTr.columns)
@@ -61,6 +68,7 @@ def preprocess(df):
     high_cardinality_features = preprocess_info['high_cardinality_features']
     low_cardinality_features = preprocess_info['low_cardinality_features']
     target_encodings = preprocess_info['target_encodings']
+    column_types = preprocess_info['column_types']
 
     ############## EXPERIMENTATION - verify that label encoders work correctly
 
@@ -75,6 +83,16 @@ def preprocess(df):
     else:
         print(f"Label encoder for {feature} not found.")
 
+
+    # prepare and save data types of each column: 
+    # Assuming column_types is the dictionary from the preprocess_info_to_update['column_types']
+    for col, dtype in column_types.items():
+        if col in tsIdTr.columns:
+            tsIdTr[col] = tsIdTr[col].astype(dtype)
+
+    # Check if the column types have been updated
+    print(tsIdTr.dtypes)
+
     ## imprvoed time complexity compared to beforehand 
 
     # Dictionary to track features with new unseen classes
@@ -82,33 +100,32 @@ def preprocess(df):
 
     # Apply label encoding to the test data
     for col in low_cardinality_features:
-        if tsIdTr[col].dtype == 'object' or col in low_cardinality_features:
-            le = label_encoders.get(col)  # Load the pre-saved encoder from preprocess_info
-            if le:
-                print(f"Applying label encoding to feature: {col}")
+        le = label_encoders.get(col)  # Load the pre-saved encoder from preprocess_info
+        if le:
+            print(f"Applying label encoding to feature: {col}")
 
-                # Convert column values to strings for compatibility with the label encoder
-                col_values = tsIdTr[col].astype(str).values
-                
-                # Track unseen labels
-                unseen_labels = set(col_values) - set(le.classes_)
-                if unseen_labels:
-                    print(f"Unseen labels in {col}: {unseen_labels}")
-                    new_classes_tracker[col] = list(unseen_labels)
-                
-                # Append unseen labels to the encoder's classes
-                le_classes = np.array(le.classes_)
-                all_classes = np.concatenate([le_classes, list(unseen_labels)])
-                
-                # Rebuild the label encoder with all classes
-                le.classes_ = all_classes
-                
-                # Perform label encoding with unseen labels mapped to -1
-                tsIdTr[col] = np.where(
-                    np.isin(col_values, le_classes),
-                    le.transform(col_values),
-                    -1
-                )
+            # Convert column values to strings for compatibility with the label encoder
+            col_values = tsIdTr[col].astype(str).values
+
+            # Track unseen labels
+            unseen_labels = set(col_values) - set(le.classes_)
+            if unseen_labels:
+                print(f"Unseen labels in {col}: {unseen_labels}")
+                new_classes_tracker[col] = list(unseen_labels)
+            
+            # Append unseen labels to the encoder's classes
+            le_classes = np.array(le.classes_)
+            all_classes = np.concatenate([le_classes, list(unseen_labels)])
+            
+            # Rebuild the label encoder with all classes
+            le.classes_ = all_classes
+            
+            # Perform label encoding with unseen labels mapped to -1
+            tsIdTr[col] = np.where(
+                np.isin(col_values, le_classes),
+                le.transform(col_values),
+                -1
+            )
 
     ############## EXPERIMENTATION - verify that label encoders work correctly - finding out unseen labels in classes
     classes_with_unseen = ['id_18','id_24','id_32']
@@ -467,8 +484,7 @@ def preprocess(df):
         'Classification_Time': timestamp,  # Time of classification
         'Model_Version': prediction_metadata['model_version'],
         'Prediction_Threshold': prediction_metadata['prediction_threshold'],
-        'Model_Name': prediction_metadata['model_name'],
-        'Features_Used': [', '.join(prediction_metadata['features_used'])] * len(tsIdTr4),  # List of features
+        'Model_Name': prediction_metadata['model_name']
     })
 
     return predictions_df

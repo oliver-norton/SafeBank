@@ -1,20 +1,37 @@
 # start data process (in order):
-# open 4 terminals
+
+# Terminal 1: 
+# start python env 
+source SafeBank_env/bin/activate
 
 # start postgres service
 sudo service postgresql start
+ # verify postgres is running
 
+# Terminal 2: 
 # start zookeepr
 zookeeper-server-start.sh /opt/kafka_2.13-3.9.0/config/zookeeper.properties
 
+# Terminal 3: 
 # start kafka
 kafka-server-start.sh /opt/kafka_2.13-3.9.0/config/server.properties
 
+# Terminal 1: 
 # run producer script
-python3 ./2-data-stream/b_stream_data/producer_chunks.py producer_script.py 
+python3 ./2-data-stream/b_stream_data/producer_chunks.py
 
+# Terminal 4: 
 # run consumer script
-python3 python3 ./2-data-stream/c-preprocess-clasify/consumer_preprocess.py 
+python3 ./2-data-stream/c-preprocess-classify/consumer_preprocess.py 
+
+# zookeeper status
+ps aux | grep zookeeper
+
+# kafka status
+ps aux | grep kafka
+
+
+
 
 ##### extra information related to postgresql database SafeBank_db 
 
