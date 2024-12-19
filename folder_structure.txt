@@ -1,0 +1,80 @@
+.
+├── 1-model
+│   ├── SafeBank_process_1.jpg
+│   ├── SafeBank_process_1.jpg:Zone.Identifier
+│   ├── datasets
+│   │   ├── sample_submission.csv
+│   │   ├── sample_submission.csv:Zone.Identifier
+│   │   ├── test_identity.csv
+│   │   ├── test_identity.csv:Zone.Identifier
+│   │   ├── test_identity.csv:Zone.Identifier:Zone.Identifier
+│   │   ├── test_transaction.csv
+│   │   ├── test_transaction.csv:Zone.Identifier
+│   │   ├── train_identity.csv
+│   │   ├── train_identity.csv:Zone.Identifier
+│   │   ├── train_identity.csv:Zone.Identifier:Zone.Identifier
+│   │   ├── train_transaction.csv
+│   │   ├── train_transaction.csv:Zone.Identifier
+│   │   └── train_transaction.csv:Zone.Identifier:Zone.Identifier
+│   ├── for_g_drive
+│   │   ├── TsIdTr_synth.pkl
+│   │   └── tsIdTr_base.pkl
+│   ├── processed_datasets
+│   │   ├── trIdTr1.csv
+│   │   └── trIdTr1.csv:Zone.Identifier
+│   ├── safeBank_lightGBM_model.txt
+│   └── scripts
+│       ├── consumer_preprocess-2024-12-19-11-00.ipynb
+│       ├── consumer_preprocess_2024-12-19-09-00.ipynb
+│       ├── explore1.ipynb
+│       ├── explore1.ipynb:Zone.Identifier
+│       ├── explore2.ipynb
+│       ├── explore2.ipynb:Zone.Identifier
+│       ├── explore3.ipynb
+│       ├── explore3.ipynb:Zone.Identifier
+│       ├── explore4_blueprint.ipynb
+│       ├── explore4_blueprint.ipynb:Zone.Identifier
+│       ├── explore5.ipynb
+│       ├── explore5.ipynb:Zone.Identifier
+│       ├── explore6.ipynb
+│       ├── explore6.ipynb:Zone.Identifier
+│       ├── processing_pipeline_6.ipynb
+│       └── processing_pipeline_6.ipynb:Zone.Identifier
+├── 1-model-placeholder
+│   ├── classification_preprocessing
+│   │   ├── preprocess_info.pkl
+│   │   ├── preprocess_train.ipynb
+│   │   ├── safeBank_lightGBM_model.txt
+│   │   └── training_performance.png
+│   ├── datasets_combined
+│   │   └── tsIdTr_base.pkl
+│   └── datasets_initial
+│       ├── test_identity.csv
+│       ├── test_transaction.csv
+│       ├── train_identity.csv
+│       └── train_transaction.csv
+├── 2-data-stream
+│   ├── a_enlarge_data_1_time
+│   │   ├── merge_test_data.ipynb
+│   │   ├── merge_test_data.ipynb:Zone.Identifier
+│   │   ├── scale_data.ipynb
+│   │   └── trIdTr_columns.txt
+│   ├── b_stream_data
+│   │   └── producer_chunks.py
+│   ├── c-preprocess-classify
+│   │   ├── consumer_preprocess.py
+│   │   ├── preprocess_info
+│   │   │   ├── preprocess_info.pkl
+│   │   │   └── safeBank_lightGBM_model.txt
+│   │   └── utils
+│   │       ├── preprocess_util.py
+│   │       └── save_to_postgres_util.py
+│   ├── d-storage
+│   │   ├── create_postgres_db.py
+│   │   └── create_table.py
+│   └── how-to-run.txt
+├── 3-frontend
+├── SafeBank_env
+├── additional-requirements.txt
+├── folder_structure.txt
+└── requirements.txt

@@ -14,7 +14,7 @@ def preprocess(df):
     tsIdTr = df.copy()
     
     # Load the preprocess_info dictionary
-    with open('./preprocess_info/preprocess_info.pkl', 'rb') as file:
+    with open('../preprocess_info/preprocess_info.pkl', 'rb') as file:
         preprocess_info = pkl.load(file)
 
     ## ONCE OFF: rename the columns 
@@ -391,7 +391,7 @@ def preprocess(df):
     X_test = tsIdTr4.drop(columns=['TransactionID']) 
 
     # Step 2: Load the pre-trained LightGBM model
-    model_path = './preprocess_info/safeBank_lightGBM_model.txt'
+    model_path = '../preprocess_info/safeBank_lightGBM_model.txt'
     lgbm_model = lgb.Booster(model_file=model_path)
 
     # Get the feature names the model was trained on

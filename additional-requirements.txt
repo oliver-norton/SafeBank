@@ -1,0 +1,11 @@
+# pip install pickle5 pandas faker numpy random2 kafka scikit-learn scipy lightgbm datetime sqlalchemy psycopg2-binary
+
+# additional programs needed:
+# kafka
+# postgresql
+# visual studio code (optional, IDE)
+# github (optional, version control)
+# docker (optional, for automation)
+
+
+
